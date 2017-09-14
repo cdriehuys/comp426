@@ -39,6 +39,28 @@ p {
   max-width: 50rem;
 }
 
+.navbar {
+  background: black;
+}
+
+.navbar__body {
+  text-align: right;
+}
+
+.navbar__link {
+  color: white;
+  display: inline-block;
+  font-weight: bold;
+  margin: 0;
+  padding: .5em 1em;
+  text-decoration: none;
+}
+
+.navbar__link.active,
+.navbar__link:hover {
+  background: #555;
+}
+
 .text-center {
   text-align: center;
 }
