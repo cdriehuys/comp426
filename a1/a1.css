@@ -63,6 +63,11 @@ p {
   background: #555;
 }
 
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+}
+
 .text-center {
   text-align: center;
 }
