@@ -46,12 +46,12 @@ p {
 }
 
 .navbar__body {
-  text-align: center;
+  display: flex;
+  justify-content: space-around;
 }
 
 .navbar__link {
   color: white;
-  display: inline-block;
   font-weight: bold;
   margin: 0;
   padding: .25em .5em;
@@ -84,7 +84,7 @@ p {
   }
 
   .navbar__body {
-    text-align: right;
+    justify-content: flex-end;
   }
 
   .navbar__link {
