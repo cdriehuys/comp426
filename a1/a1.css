@@ -20,12 +20,12 @@ h6 {
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   margin-top: 1rem;
 }
 
 h2 {
-  font-size: 2rem;
+  font-size: 1.25rem;
   margin-top: .5rem;
 }
 
@@ -33,18 +33,20 @@ p {
   margin: 1em 0;
 }
 
-.container {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 50rem;
-}
-
-.navbar {
+/* ID based selector to satisfy assignment requirement */
+#navbar {
   background: black;
 }
 
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 51rem;
+  padding: 0 .5rem;
+}
+
 .navbar__body {
-  text-align: right;
+  text-align: center;
 }
 
 .navbar__link {
@@ -52,7 +54,7 @@ p {
   display: inline-block;
   font-weight: bold;
   margin: 0;
-  padding: .5em 1em;
+  padding: .25em .5em;
   text-decoration: none;
 }
 
@@ -63,4 +65,24 @@ p {
 
 .text-center {
   text-align: center;
+}
+
+
+/* Make things bigger on bigger screens */
+@media (min-width: 481px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .navbar__body {
+    text-align: right;
+  }
+
+  .navbar__link {
+    padding: .5em 1em;
+  }
 }
