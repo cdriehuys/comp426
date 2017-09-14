@@ -36,6 +36,10 @@ p {
 /* ID based selector to satisfy assignment requirement */
 #navbar {
   background: black;
+  /* Shadows taken from https://codepen.io/sdthornton/pen/wBZdXq */
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, .16),
+    0 3px 6px rgba(0, 0, 0, .23);
 }
 
 .container {
@@ -60,7 +64,7 @@ p {
 
 .navbar__link.active,
 .navbar__link:hover {
-  background: #555;
+  background: #333;
 }
 
 .responsive-image {
@@ -70,6 +74,14 @@ p {
 
 .text-center {
   text-align: center;
+}
+
+.youtube-embed {
+  display: block;
+  height: 315px;
+  margin: 0 auto;
+  max-width: 100%;
+  width: 560px;
 }
 
 
