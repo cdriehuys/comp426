@@ -5,8 +5,16 @@
 }
 
 body {
+  display: flex;
+  flex-direction: column;
   font-family: 'Open Sans', sans-serif;
   line-height: 1.618;
+  min-height: 100vh;
+}
+
+footer {
+  background: #e5e5e5;
+  margin-top: 5rem;
 }
 
 h1,
@@ -29,6 +37,10 @@ h2 {
   margin-top: .5rem;
 }
 
+main {
+  flex-grow: 1;
+}
+
 p {
   margin: 1em 0;
 }
@@ -47,6 +59,21 @@ p {
   margin-right: auto;
   max-width: 51rem;
   padding: 0 .5rem;
+}
+
+.legal {
+  font-size: .75rem;
+}
+
+.legal a,
+.legal a:active,
+.legal a:visited {
+  color: #777;
+  text-decoration: none;
+}
+
+.legal a:hover {
+  text-decoration: underline;
 }
 
 .navbar__body {
