@@ -1,0 +1,16 @@
+{
+  "name": "comp426",
+  "version": "0.0.0",
+  "description": "Homework assignments for COMP 426",
+  "main": "index.js",
+  "repository": "https://github.com/cdriehuys/comp426",
+  "author": "Chathan Driehuys <cdriehuys@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "server": "gulp"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.13",
+    "gulp": "^3.9.1"
+  }
+}
