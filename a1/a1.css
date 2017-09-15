@@ -21,8 +21,11 @@ body {
 }
 
 footer {
-  background: #e5e5e5;
   margin-top: 5rem;
+}
+
+footer > .container {
+  border-top: 1px solid #e5e5e5;
 }
 
 h1,
@@ -111,7 +114,6 @@ p {
 
 .navbar__link {
   color: white;
-  font-weight: bold;
   margin: 0;
   padding: .25em .5em;
   text-decoration: none;
