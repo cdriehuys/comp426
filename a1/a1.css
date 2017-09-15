@@ -134,6 +134,7 @@ p {
 }
 
 .youtube-embed {
+  border: 0;
   display: block;
   height: 315px;
   margin: 0 auto;
