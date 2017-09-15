@@ -12,6 +12,8 @@
   padding: 0;
 }
 
+
+
 body {
   display: flex;
   flex-direction: column;
@@ -62,6 +64,38 @@ p {
   box-shadow:
     0 3px 6px rgba(0, 0, 0, .16),
     0 3px 6px rgba(0, 0, 0, .23);
+}
+
+/* Blockquote style taken from:
+ * https://css-tricks.com/snippets/css/simple-and-nice-blockquote-styling/
+ */
+.big-quote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.5em;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+
+.big-quote:after {
+  visibility: hidden;
+  content: close-quote;
+  line-height: 0;
+}
+
+.big-quote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: .05em;
+  vertical-align: -0.4em;
+}
+
+.big-quote p {
+  display: inline;
 }
 
 .button {
