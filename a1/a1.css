@@ -1,0 +1,200 @@
+/* Attribution:
+ *
+ * Box shadows taken from:
+ * - https://github.com/prestopasto/SCSS-Material-Shadows/blob/c8d867d9821ff7d36ce3df02963f832a705bc009/src/md-material-shadows.scss
+ * - https://codepen.io/sdthornton/pen/wBZdXq
+ */
+
+
+/* Reset default margins and paddings so we don't get any surprises. */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.618;
+  min-height: 100vh;
+}
+
+footer {
+  margin-top: 5rem;
+}
+
+footer > .container {
+  border-top: 1px solid #e5e5e5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: normal;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 1rem 0;
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin: .5rem 0;
+}
+
+main {
+  flex-grow: 1;
+}
+
+p {
+  margin: 1em 0;
+}
+
+/* ID based selector to satisfy assignment requirement */
+#navbar {
+  background: black;
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, .16),
+    0 3px 6px rgba(0, 0, 0, .23);
+}
+
+/* Blockquote style taken from:
+ * https://css-tricks.com/snippets/css/simple-and-nice-blockquote-styling/
+ */
+.big-quote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.5em;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+
+.big-quote:after {
+  visibility: hidden;
+  content: close-quote;
+  line-height: 0;
+}
+
+.big-quote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: .05em;
+  vertical-align: -0.4em;
+}
+
+.big-quote p {
+  display: inline;
+}
+
+.button {
+  background: black;
+  border-radius: 2px;
+  box-shadow:
+    0 3px 1px -2px rgba(0,0,0,.2),
+    0 2px 2px 0 rgba(0, 0, 0, .14),
+    0 1px 5px 0 rgba(0, 0, 0, .12);
+  color: white;
+  display: inline-block;
+  padding: .25em .5em;
+  text-decoration: none;
+}
+
+.button:active,
+.button:hover {
+  box-shadow:
+    0 2px 4px -1px rgba(0,0,0,.2),
+    0 4px 5px 0 rgba(0,0,0,.14),
+    0 1px 10px 0 rgba(0,0,0,.12);
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 51rem;
+  padding: 0 .5rem;
+}
+
+.legal {
+  font-size: .75rem;
+}
+
+.legal a,
+.legal a:active,
+.legal a:visited {
+  color: #777;
+  text-decoration: none;
+}
+
+.legal a:hover {
+  text-decoration: underline;
+}
+
+.navbar__body {
+  display: flex;
+  justify-content: stretch;
+}
+
+.navbar__link {
+  color: white;
+  flex-grow: 1;
+  margin: 0;
+  padding: .25em .5em;
+  text-align: center;
+  text-decoration: none;
+}
+
+.navbar__link.active,
+.navbar__link:hover {
+  background: #333;
+}
+
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.youtube-embed {
+  border: 0;
+  display: block;
+  height: 315px;
+  margin: 0 auto;
+  max-width: 100%;
+  width: 560px;
+}
+
+
+/* Make things bigger on bigger screens */
+@media (min-width: 481px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .navbar__body {
+    justify-content: flex-end;
+  }
+
+  .navbar__link {
+    flex-grow: 0;
+    padding: .5em 1em;
+  }
+}

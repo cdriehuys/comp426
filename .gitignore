@@ -1,0 +1,7 @@
+# Distributed Files
+node_modules/
+
+
+# Sublime Text Files
+*.sublime-project
+*.sublime-workspace
