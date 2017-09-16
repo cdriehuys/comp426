@@ -12,6 +12,13 @@ $ yarn
 $ yarn run server
 ```
 
+## Assignments
+
+### Assignment 1
+
+A static site detailing [Darkside's](http://uncdarkside.com) **mythological** journey to a national title. Uses HTML and CSS only.
+
+
 ## License
 
 This project is licensed under the MIT License.
