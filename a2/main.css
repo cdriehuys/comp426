@@ -13,10 +13,11 @@
 
 
 .card-hand__card {
+  cursor: pointer;
   height: auto;
   margin-left: -100px;
   padding-top: 20px;
-  transition: margin-bottom .25s, padding-top .25s;
+  transition: padding-bottom .25s, padding-top .25s;
   width: 150px;
 }
 
@@ -26,6 +27,16 @@
 
 .card-hand__card:hover,
 .card-hand__card--selected {
-  margin-bottom: 20px;
+  padding-bottom: 20px;
   padding-top: 0;
+}
+
+
+.message-box {
+  font-size: 1.25em;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 50em;
+  padding: 1em;
+  text-align: center;
 }

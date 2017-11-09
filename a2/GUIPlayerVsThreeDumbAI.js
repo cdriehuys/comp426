@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  var north = new GUIPlayer('Player');
+  var north = new GUIPlayer('Player', $('#north'));
   var east = new DumbAI('Bob');
   var south = new DumbAI('Carol');
   var west = new DumbAI('David');
