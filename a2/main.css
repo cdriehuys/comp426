@@ -1,0 +1,31 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+.card-hand {
+  border: 1px solid black;
+  padding: 1em;
+  margin: 1em;
+}
+
+
+.card-hand__card {
+  height: auto;
+  margin-left: -100px;
+  padding-top: 20px;
+  transition: margin-bottom .25s, padding-top .25s;
+  width: 150px;
+}
+
+.card-hand__card:first-child {
+  margin-left: 0;
+}
+
+.card-hand__card:hover,
+.card-hand__card--selected {
+  margin-bottom: 20px;
+  padding-top: 0;
+}

@@ -2,9 +2,19 @@
 <html>
   <head>
     <title>Hearts</title>
+
+    <link href="main.css" rel="stylesheet">
   </head>
 
   <body>
+    <p>Card images from Byron Knoll: http://code.google.com/p/vector-playing-cards/</p>
+
+    <div class="card-hand">
+      <image alt="2 of Clubs" class="card-hand__card" src="images/2_of_clubs.png" />
+      <image alt="7 of Hearts" class="card-hand__card" src="images/7_of_hearts.png">
+      <image alt="King of Hearts" class="card-hand__card" src="images/king_of_hearts.png">
+    </div>
+
     <script
       crossorigin="anonymous"
       integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -15,5 +25,11 @@
     <script src="DumbAI.js"></script>
     <script src="GUIPlayer.js"></script>
     <script src="GUIPlayerVsThreeDumbAI.js"></script>
+
+    <script>
+      $('.card-hand__card').click(function() {
+        $(this).toggleClass('card-hand__card--selected');
+      });
+    </script>
   </body>
 </html>
