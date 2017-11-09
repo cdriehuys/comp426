@@ -19,7 +19,7 @@ gulp.task('serve', function() {
   });
 
   gulp.watch('**/*.css', ['css']);
-  gulp.watch('**/*.{html,jpg}', reload);
+  gulp.watch('**/*.{html,jpg,js}', reload);
 });
 
 
