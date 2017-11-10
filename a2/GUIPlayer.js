@@ -2,6 +2,7 @@
  * A Hearts player that interacts with a GUI.
  */
 var GUIPlayer = function(playerName, rootComponent) {
+  var allowMultiSelect = false;
   var currentGame;
   var currentMatch;
   var currentPosition;
@@ -56,6 +57,9 @@ var GUIPlayer = function(playerName, rootComponent) {
     });
 
     game.registerEventHandler(Hearts.GAME_STARTED_EVENT, handleGameStart);
+    game.registerEventHandler(Hearts.PASSING_COMPLETE_EVENT, handlePassingComplete);
+    game.registerEventHandler(Hearts.TRICK_CONTINUE_EVENT, handleTrickContinue);
+    game.registerEventHandler(Hearts.TRICK_START_EVENT, handleTrickContinue);
   }
 
   /**
@@ -93,33 +97,7 @@ var GUIPlayer = function(playerName, rootComponent) {
     return 'images/' + fileRank + '_of_' + fileSuit + '.png';
   }
 
-  function handleCardClick() {
-    $(this).toggleClass('card-hand__card--selected');
-  }
-
-  /**
-   * Handle an event of type GAME_STARTED_EVENT.
-   *
-   * @param {GameStartedEvent} event The even that occurred.
-   */
-  function handleGameStart(event) {
-    if (event.getPassType() === Hearts.PASS_NONE) {
-      console.log('No passing required.')
-
-      return;
-    }
-
-    setMessage('Please select 3 cards to pass.');
-
-    var $passBtn = $('<button>Pass Cards</button>');
-    $passBtn.click(handlePassCards);
-
-    $actionBar.empty();
-    $actionBar.append($passBtn);
-
-    var hand = currentGame.getHand(playerKey);
-    var cards = hand.getDealtCards(playerKey);
-
+  function displayCards(cards) {
     $hand.empty();
 
     for (var i = 0; i < cards.length; i++) {
@@ -136,6 +114,48 @@ var GUIPlayer = function(playerName, rootComponent) {
     }
   }
 
+  function handleCardClick() {
+    var $clicked = $(this);
+    var selected = $clicked.hasClass('card-hand__card--selected');
+
+    if (!allowMultiSelect) {
+      $hand.find('.card-hand__card--selected').removeClass('card-hand__card--selected');
+    }
+
+    if (!selected) {
+      $clicked.addClass('card-hand__card--selected');
+    }
+  }
+
+  /**
+   * Handle an event of type GAME_STARTED_EVENT.
+   *
+   * @param {GameStartedEvent} event The even that occurred.
+   */
+  function handleGameStart(event) {
+    if (event.getPassType() === Hearts.PASS_NONE) {
+      console.log('No passing required.')
+
+      return;
+    }
+
+    // Passing requires selection of multiple cards
+    allowMultiSelect = true;
+
+    setMessage('Please select 3 cards to pass.');
+
+    var $passBtn = $('<button>Pass Cards</button>');
+    $passBtn.click(handlePassCards);
+
+    $actionBar.empty();
+    $actionBar.append($passBtn);
+
+    var hand = currentGame.getHand(playerKey);
+    var cards = hand.getDealtCards(playerKey);
+
+    displayCards(cards);
+  }
+
   function handlePassCards() {
     var cards = getSelectedCards();
 
@@ -145,6 +165,70 @@ var GUIPlayer = function(playerName, rootComponent) {
     }
 
     currentGame.passCards(getSelectedCards(), playerKey);
+  }
+
+  function handlePassingComplete() {
+    allowMultiSelect = false;
+
+    setMessage('');
+    $actionBar.empty();
+
+    var hand = currentGame.getHand(playerKey);
+    var cards = hand.getUnplayedCards(playerKey);
+
+    displayCards(cards);
+  }
+
+  function handlePlayCard() {
+    var cards = getSelectedCards();
+
+    if (cards.length !== 1) {
+      alert('Please select a card to play.');
+      return;
+    }
+
+    if (!isPlayable(cards[0])) {
+      alert("That card is not playable.");
+      return;
+    }
+
+    currentGame.playCard(cards[0], playerKey);
+  }
+
+  function handleTrickContinue(event) {
+    var positionToPlay;
+
+    console.log(event);
+
+    if (event.event_type === Hearts.TRICK_CONTINUE_EVENT) {
+      positionToPlay = event.getNextPos();
+    } else {
+      positionToPlay = event.getStartPos();
+    }
+
+    if (positionToPlay !== currentPosition) {
+      return;
+    }
+
+    setMessage('Please play a card.');
+
+    $playBtn = $('<button>Play Card</button>');
+    $playBtn.click(handlePlayCard);
+
+    $actionBar.empty();
+    $actionBar.append($playBtn);
+
+    var hand = currentGame.getHand(playerKey);
+    displayCards(hand.getUnplayedCards(playerKey));
+  }
+
+  function isPlayable(card) {
+    var hand = currentGame.getHand(playerKey);
+    var playable = hand.getPlayableCards(playerKey);
+
+    return !!playable.find(function(playableCard) {
+      return playableCard.getSuit() === card.getSuit() && playableCard.getRank() === card.getRank();
+    });
   }
 
   function getSelectedCards() {
