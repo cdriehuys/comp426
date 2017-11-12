@@ -10,31 +10,31 @@
     <p>Card images from Byron Knoll: http://code.google.com/p/vector-playing-cards/</p>
 
     <h2>Table</h2>
-    <div class="table" id="table">
-      <div class="table__player" id="table-north">
+    <div class="trick" id="table">
+      <div class="trick__player" id="table-north">
         <h3>North (<span id="score-north">0</span>)</h3>
-        <div class="table__card">
+        <div class="trick__card">
           <img alt="Card Placeholder" class="card" src="images/card_placeholder.png">
         </div>
       </div>
 
-      <div class="table__player"  id="table-east">
+      <div class="trick__player"  id="table-east">
         <h3>East (<span id="score-east">0</span>)</h3>
-        <div class="table__card">
+        <div class="trick__card">
           <img alt="Card Placeholder" class="card" src="images/card_placeholder.png">
         </div>
       </div>
 
-      <div class="table__player" id="table-south">
+      <div class="trick__player" id="table-south">
         <h3>South (<span id="score-south">0</span>)</h3>
-        <div class="table__card">
+        <div class="trick__card">
           <img alt="Card Placeholder" class="card" src="images/card_placeholder.png">
         </div>
       </div>
 
-      <div class="table__player" id="table-west">
+      <div class="trick__player" id="table-west">
         <h3>West (<span id="score-west">0</span>)</h3>
-        <div class="table__card">
+        <div class="trick__card">
           <img alt="Card Placeholder" class="card" src="images/card_placeholder.png">
         </div>
       </div>
@@ -42,6 +42,38 @@
 
     <h2>Player Hand</h2>
     <div id="north"></div>
+
+    <h2>Last Trick</h2>
+    <div class="message-box" id="last-trick-message"></div>
+    <div class="trick" id="last-trick">
+      <div class="trick__player" id="last-trick-north">
+        <h3>North</h3>
+        <div class="trick__card">
+          <img alt="Card Placeholder" class="card" src="images/card_placeholder.png">
+        </div>
+      </div>
+
+      <div class="trick__player" id="last-trick-east">
+        <h3>East</h3>
+        <div class="trick__card">
+          <img alt="Card Placeholder" class="card" src="images/card_placeholder.png">
+        </div>
+      </div>
+
+      <div class="trick__player" id="last-trick-south">
+        <h3>South</h3>
+        <div class="trick__card">
+          <img alt="Card Placeholder" class="card" src="images/card_placeholder.png">
+        </div>
+      </div>
+
+      <div class="trick__player" id="last-trick-west">
+        <h3>West</h3>
+        <div class="trick__card">
+          <img alt="Card Placeholder" class="card" src="images/card_placeholder.png">
+        </div>
+      </div>
+    </div>
 
     <script
       crossorigin="anonymous"

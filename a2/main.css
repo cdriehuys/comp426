@@ -5,6 +5,11 @@
 }
 
 
+.action-bar {
+  text-align: center;
+}
+
+
 .card {
   height: auto;
   padding-top: 20px;
@@ -49,7 +54,7 @@
 }
 
 
-.table {
+.trick {
   border: 1px solid black;
   display: flex;
   margin: 1em;
@@ -58,6 +63,6 @@
 }
 
 
-.table__player {
+.trick__player {
   flex: 1;
 }

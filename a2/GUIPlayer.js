@@ -6,6 +6,7 @@ var GUIPlayer = function(playerName, rootComponent) {
   var currentGame;
   var currentMatch;
   var currentPosition;
+  var lastTrick = {};
   var name = playerName;
   var playerKey;
 
@@ -16,13 +17,15 @@ var GUIPlayer = function(playerName, rootComponent) {
   var $messageBox = $('<div class="message-box" />');
   $root.append($messageBox);
 
-  var $hand = $('<div class="card-hand" />');
-  $root.append($hand);
-
   var $actionBar = $('<div class="action-bar" />');
   $root.append($actionBar);
 
+  var $hand = $('<div class="card-hand" />');
+  $root.append($hand);
+
   var $table = $('#table');
+
+  var $lastTrick = $('#last-trick');
 
   /**
    * Get the player's name.
@@ -62,6 +65,7 @@ var GUIPlayer = function(playerName, rootComponent) {
     game.registerEventHandler(Hearts.GAME_OVER_EVENT, handleGameOver);
     game.registerEventHandler(Hearts.GAME_STARTED_EVENT, handleGameStart);
     game.registerEventHandler(Hearts.PASSING_COMPLETE_EVENT, handlePassingComplete);
+    game.registerEventHandler(Hearts.TRICK_COMPLETE_EVENT, handleTrickComplete);
     game.registerEventHandler(Hearts.TRICK_CONTINUE_EVENT, handleTrickContinue);
     game.registerEventHandler(Hearts.TRICK_START_EVENT, handleTrickContinue);
   }
@@ -123,7 +127,7 @@ var GUIPlayer = function(playerName, rootComponent) {
   }
 
   function clearTable() {
-    $('.table__card').each(function() {
+    $table.find('.trick__card').each(function() {
         $container = $(this)
         $img = $('<img alt="Card Placholder" class="card" src="images/card_placeholder.png">');
 
@@ -176,7 +180,7 @@ var GUIPlayer = function(playerName, rootComponent) {
       $tablePosition = $('#table-west');
     }
 
-    var $cardDiv = $tablePosition.find('.table__card');
+    var $cardDiv = $tablePosition.find('.trick__card');
 
     var $card = $('<img class="card">');
     $card.attr('alt', card.toString());
@@ -184,6 +188,9 @@ var GUIPlayer = function(playerName, rootComponent) {
 
     $cardDiv.empty();
     $cardDiv.append($card);
+
+    // Save play
+    lastTrick[pos] = card;
   }
 
   /**
@@ -248,6 +255,35 @@ var GUIPlayer = function(playerName, rootComponent) {
     $('#score-west').text(scoreboard[Hearts.WEST]);
 
     clearTable();
+  }
+
+  function handleTrickComplete(event) {
+    var pairs = [
+        [Hearts.NORTH, $('#last-trick-north')],
+        [Hearts.EAST, $('#last-trick-east')],
+        [Hearts.SOUTH, $('#last-trick-south')],
+        [Hearts.WEST, $('#last-trick-west')]
+    ];
+
+    for (var i = 0; i < pairs.length; i++) {
+        var card = lastTrick[pairs[i][0]];
+
+        var $container = pairs[i][1].find('.trick__card');
+        var $card = $('<img class="card">');
+        $card.attr('alt', card.toString());
+        $card.attr('src', cardToImageFile(card));
+
+        $container.empty();
+        $container.append($card);
+    }
+
+    var trick = event.getTrick();
+
+    var winner = trick.getWinner();
+    var points = trick.getPoints();
+    var plural = points !== 1 ? 'points' : 'point';
+
+    $('#last-trick-message').text(winner + ' won the trick with ' + points + ' ' + plural);
   }
 
   function handleTrickContinue(event) {
