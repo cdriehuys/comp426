@@ -2,7 +2,7 @@
  * A Hearts player that interacts with a GUI.
  */
 var GUIPlayer = function(playerName, rootComponent) {
-  var allowMultiSelect = false;
+  var cardClickBehaviour = function() {};
   var currentGame;
   var currentMatch;
   var currentPosition;
@@ -62,6 +62,27 @@ var GUIPlayer = function(playerName, rootComponent) {
     game.registerEventHandler(Hearts.TRICK_START_EVENT, handleTrickContinue);
   }
 
+  function cardClickBehaviorMultiSelect(cardElement) {
+    var $clicked = $(cardElement);
+    $clicked.toggleClass('card-hand__card--selected');
+  }
+
+  function cardClickBehaviourPlayCard(cardElement) {
+    var $card = $(cardElement);
+
+    var rank = $card.data('rank');
+    var suit = $card.data('suit');
+
+    var card = new Card(rank, suit);
+
+    if (!isPlayable(card)) {
+      alert("That card is not playable.");
+      return;
+    }
+
+    currentGame.playCard(card, playerKey);
+  }
+
   /**
    * Get the path to the image for a given card.
    */
@@ -101,7 +122,7 @@ var GUIPlayer = function(playerName, rootComponent) {
     $hand.empty();
 
     for (var i = 0; i < cards.length; i++) {
-      var $card = $('<image class="card-hand__card"/>');
+      var $card = $('<image class="card-hand__card" />');
       $card.attr('alt', cards[i].toString());
       $card.attr('src', cardToImageFile(cards[i]));
 
@@ -115,16 +136,7 @@ var GUIPlayer = function(playerName, rootComponent) {
   }
 
   function handleCardClick() {
-    var $clicked = $(this);
-    var selected = $clicked.hasClass('card-hand__card--selected');
-
-    if (!allowMultiSelect) {
-      $hand.find('.card-hand__card--selected').removeClass('card-hand__card--selected');
-    }
-
-    if (!selected) {
-      $clicked.addClass('card-hand__card--selected');
-    }
+    cardClickBehaviour(this);
   }
 
   /**
@@ -140,7 +152,7 @@ var GUIPlayer = function(playerName, rootComponent) {
     }
 
     // Passing requires selection of multiple cards
-    allowMultiSelect = true;
+    cardClickBehaviour = cardClickBehaviorMultiSelect;
 
     setMessage('Please select 3 cards to pass.');
 
@@ -168,7 +180,7 @@ var GUIPlayer = function(playerName, rootComponent) {
   }
 
   function handlePassingComplete() {
-    allowMultiSelect = false;
+    cardClickBehaviour = function() {};
 
     setMessage('');
     $actionBar.empty();
@@ -177,22 +189,6 @@ var GUIPlayer = function(playerName, rootComponent) {
     var cards = hand.getUnplayedCards(playerKey);
 
     displayCards(cards);
-  }
-
-  function handlePlayCard() {
-    var cards = getSelectedCards();
-
-    if (cards.length !== 1) {
-      alert('Please select a card to play.');
-      return;
-    }
-
-    if (!isPlayable(cards[0])) {
-      alert("That card is not playable.");
-      return;
-    }
-
-    currentGame.playCard(cards[0], playerKey);
   }
 
   function handleTrickContinue(event) {
@@ -212,11 +208,7 @@ var GUIPlayer = function(playerName, rootComponent) {
 
     setMessage('Please play a card.');
 
-    $playBtn = $('<button>Play Card</button>');
-    $playBtn.click(handlePlayCard);
-
-    $actionBar.empty();
-    $actionBar.append($playBtn);
+    cardClickBehaviour = cardClickBehaviourPlayCard;
 
     var hand = currentGame.getHand(playerKey);
     displayCards(hand.getUnplayedCards(playerKey));
