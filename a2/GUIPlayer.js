@@ -22,6 +22,8 @@ var GUIPlayer = function(playerName, rootComponent) {
   var $actionBar = $('<div class="action-bar" />');
   $root.append($actionBar);
 
+  var $table = $('#table');
+
   /**
    * Get the player's name.
    *
@@ -56,6 +58,7 @@ var GUIPlayer = function(playerName, rootComponent) {
       console.log('Received Event:', e.toString());
     });
 
+    game.registerEventHandler(Hearts.CARD_PLAYED_EVENT, handleCardPlayed);
     game.registerEventHandler(Hearts.GAME_STARTED_EVENT, handleGameStart);
     game.registerEventHandler(Hearts.PASSING_COMPLETE_EVENT, handlePassingComplete);
     game.registerEventHandler(Hearts.TRICK_CONTINUE_EVENT, handleTrickContinue);
@@ -118,11 +121,15 @@ var GUIPlayer = function(playerName, rootComponent) {
     return 'images/' + fileRank + '_of_' + fileSuit + '.png';
   }
 
+  function clearTable() {
+    $('.table__card').empty();
+  }
+
   function displayCards(cards) {
     $hand.empty();
 
     for (var i = 0; i < cards.length; i++) {
-      var $card = $('<image class="card-hand__card" />');
+      var $card = $('<img class="card-hand__card" />');
       $card.attr('alt', cards[i].toString());
       $card.attr('src', cardToImageFile(cards[i]));
 
@@ -137,6 +144,31 @@ var GUIPlayer = function(playerName, rootComponent) {
 
   function handleCardClick() {
     cardClickBehaviour(this);
+  }
+
+  function handleCardPlayed(event) {
+    var card = event.getCard();
+    var pos = event.getPosition();
+    var $tablePosition;
+
+    if (pos === Hearts.NORTH) {
+      $tablePosition = $('#table-north');
+    } else if (pos === Hearts.EAST) {
+      $tablePosition = $('#table-east');
+    } else if (pos === Hearts.SOUTH) {
+      $tablePosition = $('#table-south');
+    } else {
+      $tablePosition = $('#table-west');
+    }
+
+    var $cardDiv = $tablePosition.find('.table__card');
+
+    var $card = $('<img>');
+    $card.attr('alt', card.toString());
+    $card.attr('src', cardToImageFile(card));
+
+    $cardDiv.empty();
+    $cardDiv.append($card);
   }
 
   /**
@@ -194,11 +226,10 @@ var GUIPlayer = function(playerName, rootComponent) {
   function handleTrickContinue(event) {
     var positionToPlay;
 
-    console.log(event);
-
     if (event.event_type === Hearts.TRICK_CONTINUE_EVENT) {
       positionToPlay = event.getNextPos();
     } else {
+      clearTable();
       positionToPlay = event.getStartPos();
     }
 

@@ -40,3 +40,23 @@
   padding: 1em;
   text-align: center;
 }
+
+
+.table {
+  border: 1px solid black;
+  display: flex;
+  margin: 1em;
+  padding: 1em;
+  text-align: center;
+}
+
+
+.table__card > img {
+  height: auto;
+  max-width: 150px;
+}
+
+
+.table__player {
+  flex: 1;
+}

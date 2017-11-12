@@ -9,6 +9,30 @@
   <body>
     <p>Card images from Byron Knoll: http://code.google.com/p/vector-playing-cards/</p>
 
+    <h2>Table</h2>
+    <div class="table" id="table">
+      <div class="table__player" id="table-north">
+        <h3>North</h3>
+        <div class="table__card"></div>
+      </div>
+
+      <div class="table__player"  id="table-east">
+        <h3>East</h3>
+        <div class="table__card"></div>
+      </div>
+
+      <div class="table__player" id="table-south">
+        <h3>South</h3>
+        <div class="table__card"></div>
+      </div>
+
+      <div class="table__player" id="table-west">
+        <h3>West</h3>
+        <div class="table__card"></div>
+      </div>
+    </div>
+
+    <h2>Player Hand</h2>
     <div id="north"></div>
 
     <script
@@ -21,11 +45,5 @@
     <script src="DumbAI.js"></script>
     <script src="GUIPlayer.js"></script>
     <script src="GUIPlayerVsThreeDumbAI.js"></script>
-
-    <script>
-      $('.card-hand__card').click(function() {
-        $(this).toggleClass('card-hand__card--selected');
-      });
-    </script>
   </body>
 </html>
