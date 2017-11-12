@@ -59,6 +59,7 @@ var GUIPlayer = function(playerName, rootComponent) {
     });
 
     game.registerEventHandler(Hearts.CARD_PLAYED_EVENT, handleCardPlayed);
+    game.registerEventHandler(Hearts.GAME_OVER_EVENT, handleGameOver);
     game.registerEventHandler(Hearts.GAME_STARTED_EVENT, handleGameStart);
     game.registerEventHandler(Hearts.PASSING_COMPLETE_EVENT, handlePassingComplete);
     game.registerEventHandler(Hearts.TRICK_CONTINUE_EVENT, handleTrickContinue);
@@ -122,7 +123,13 @@ var GUIPlayer = function(playerName, rootComponent) {
   }
 
   function clearTable() {
-    $('.table__card').empty();
+    $('.table__card').each(function() {
+        $container = $(this)
+        $img = $('<img alt="Card Placholder" class="card" src="images/card_placeholder.png">');
+
+        $container.empty();
+        $container.append($img);
+    });
   }
 
   function displayCards(cards, filterPlayable) {
@@ -229,6 +236,18 @@ var GUIPlayer = function(playerName, rootComponent) {
     var cards = hand.getUnplayedCards(playerKey);
 
     displayCards(cards);
+  }
+
+  function handleGameOver() {
+    var scoreboard = currentMatch.getScoreboard();
+    console.log(scoreboard);
+
+    $('#score-north').text(scoreboard[Hearts.NORTH]);
+    $('#score-east').text(scoreboard[Hearts.EAST]);
+    $('#score-south').text(scoreboard[Hearts.SOUTH]);
+    $('#score-west').text(scoreboard[Hearts.WEST]);
+
+    clearTable();
   }
 
   function handleTrickContinue(event) {
