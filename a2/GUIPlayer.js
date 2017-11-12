@@ -67,7 +67,7 @@ var GUIPlayer = function(playerName, rootComponent) {
 
   function cardClickBehaviorMultiSelect(cardElement) {
     var $clicked = $(cardElement);
-    $clicked.toggleClass('card-hand__card--selected');
+    $clicked.toggleClass('card--selected');
   }
 
   function cardClickBehaviourPlayCard(cardElement) {
@@ -125,18 +125,26 @@ var GUIPlayer = function(playerName, rootComponent) {
     $('.table__card').empty();
   }
 
-  function displayCards(cards) {
+  function displayCards(cards, filterPlayable) {
+    filterPlayable = filterPlayable || false;
+
     $hand.empty();
 
     for (var i = 0; i < cards.length; i++) {
-      var $card = $('<img class="card-hand__card" />');
+      var $card = $('<img class="card card-hand__card" />');
       $card.attr('alt', cards[i].toString());
       $card.attr('src', cardToImageFile(cards[i]));
 
       $card.data('suit', cards[i].getSuit());
       $card.data('rank', cards[i].getRank());
 
-      $card.click(handleCardClick);
+      // Handle the case where we need to select cards for passing
+      if (!filterPlayable || isPlayable(cards[i])) {
+        $card.addClass('card--selectable');
+        $card.click(handleCardClick);
+      } else {
+        $card.addClass('card--unplayable');
+      }
 
       $hand.append($card);
     }
@@ -163,7 +171,7 @@ var GUIPlayer = function(playerName, rootComponent) {
 
     var $cardDiv = $tablePosition.find('.table__card');
 
-    var $card = $('<img>');
+    var $card = $('<img class="card">');
     $card.attr('alt', card.toString());
     $card.attr('src', cardToImageFile(card));
 
@@ -174,7 +182,7 @@ var GUIPlayer = function(playerName, rootComponent) {
   /**
    * Handle an event of type GAME_STARTED_EVENT.
    *
-   * @param {GameStartedEvent} event The even that occurred.
+   * @param {GameStartedEvent} event The event that occurred.
    */
   function handleGameStart(event) {
     if (event.getPassType() === Hearts.PASS_NONE) {
@@ -197,7 +205,7 @@ var GUIPlayer = function(playerName, rootComponent) {
     var hand = currentGame.getHand(playerKey);
     var cards = hand.getDealtCards(playerKey);
 
-    displayCards(cards);
+    displayCards(cards, false);
   }
 
   function handlePassCards() {
@@ -242,7 +250,7 @@ var GUIPlayer = function(playerName, rootComponent) {
     cardClickBehaviour = cardClickBehaviourPlayCard;
 
     var hand = currentGame.getHand(playerKey);
-    displayCards(hand.getUnplayedCards(playerKey));
+    displayCards(hand.getUnplayedCards(playerKey), true);
   }
 
   function isPlayable(card) {
@@ -257,7 +265,7 @@ var GUIPlayer = function(playerName, rootComponent) {
   function getSelectedCards() {
     var selected = [];
 
-    $hand.find('.card-hand__card--selected').each(function() {
+    $hand.find('.card--selected').each(function() {
       var $card = $(this);
 
       selected.push(new Card($card.data('rank'), $card.data('suit')));

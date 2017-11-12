@@ -5,6 +5,24 @@
 }
 
 
+.card {
+  height: auto;
+  padding-top: 20px;
+  width: 150px;
+}
+
+.card--selectable {
+  cursor: pointer;
+  transition: padding-bottom .25s, padding-top .25s;
+}
+
+.card--selectable:hover,
+.card--selected {
+  padding-bottom: 20px;
+  padding-top: 0;
+}
+
+
 .card-hand {
   border: 1px solid black;
   padding: 1em;
@@ -13,22 +31,11 @@
 
 
 .card-hand__card {
-  cursor: pointer;
-  height: auto;
   margin-left: -100px;
-  padding-top: 20px;
-  transition: padding-bottom .25s, padding-top .25s;
-  width: 150px;
 }
 
 .card-hand__card:first-child {
   margin-left: 0;
-}
-
-.card-hand__card:hover,
-.card-hand__card--selected {
-  padding-bottom: 20px;
-  padding-top: 0;
 }
 
 
@@ -48,12 +55,6 @@
   margin: 1em;
   padding: 1em;
   text-align: center;
-}
-
-
-.table__card > img {
-  height: auto;
-  max-width: 150px;
 }
 
 
