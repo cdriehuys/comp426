@@ -18,6 +18,10 @@ $ yarn run server
 
 A static site detailing [Darkside's](http://uncdarkside.com) **mythological** journey to a national title. Uses HTML and CSS only.
 
+### Assignment 2
+
+A GUI version of the Game of Hearts. The player plays against 3 "AI" players. Uses HTML, CSS, and JavaScript.
+
 
 ## License
 
