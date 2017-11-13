@@ -57,7 +57,9 @@ main {
 
 
 .card-hand {
+  background: green;
   border: 1px solid black;
+  color: white;
   padding: 1em;
   margin: 1em;
 }
@@ -95,7 +97,9 @@ main {
 
 
 .trick {
+  background: green;
   border: 1px solid black;
+  color: white;
   display: flex;
   margin: 1em;
   padding: 1em;
