@@ -4,6 +4,12 @@
 var GUIPlayer = function(playerName, rootComponent) {
   var cardClickBehaviour = function() {};
   var currentGame;
+  var currentGameScore = {
+    [Hearts.NORTH]: 0,
+    [Hearts.EAST]: 0,
+    [Hearts.SOUTH]: 0,
+    [Hearts.WEST]: 0,
+  };
   var currentMatch;
   var currentPosition;
   var lastTrick = {};
@@ -247,13 +253,14 @@ var GUIPlayer = function(playerName, rootComponent) {
   }
 
   function handleGameOver() {
-    var scoreboard = currentMatch.getScoreboard();
-    console.log(scoreboard);
+    currentGameScore = {
+      [Hearts.NORTH]: 0,
+      [Hearts.EAST]: 0,
+      [Hearts.SOUTH]: 0,
+      [Hearts.WEST]: 0,
+    };
 
-    $('#score-north').text(scoreboard[Hearts.NORTH]);
-    $('#score-east').text(scoreboard[Hearts.EAST]);
-    $('#score-south').text(scoreboard[Hearts.SOUTH]);
-    $('#score-west').text(scoreboard[Hearts.WEST]);
+    updateScoreboard();
 
     clearTable();
   }
@@ -285,6 +292,10 @@ var GUIPlayer = function(playerName, rootComponent) {
     var plural = points !== 1 ? 'points' : 'point';
 
     $('#last-trick-message').text(winner + ' won the trick with ' + points + ' ' + plural);
+
+    currentGameScore[winner] += points;
+
+    updateScoreboard();
   }
 
   function handleTrickContinue(event) {
@@ -349,5 +360,24 @@ var GUIPlayer = function(playerName, rootComponent) {
 
       return c1.getRank() - c2.getRank();
     });
+  }
+
+  function updateScoreboard() {
+    var scoreboard = currentMatch.getScoreboard();
+
+    var pairs = [
+      [Hearts.NORTH, $('#score-north')],
+      [Hearts.EAST, $('#score-east')],
+      [Hearts.SOUTH, $('#score-south')],
+      [Hearts.WEST, $('#score-west')],
+    ];
+
+    for (var i = 0; i < pairs.length; i++) {
+      var pos = pairs[i][0];
+      var totalScore = scoreboard[pos];
+      var text = currentGameScore[pos] === 0 ? totalScore.toString() : totalScore + ' + ' + currentGameScore[pos];
+
+      pairs[i][1].text(text);
+    }
   }
 }
