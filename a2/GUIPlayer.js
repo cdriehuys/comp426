@@ -137,6 +137,7 @@ var GUIPlayer = function(playerName, rootComponent) {
   }
 
   function displayCards(cards, filterPlayable) {
+    cards = sortCards(cards);
     filterPlayable = filterPlayable || false;
 
     $hand.empty();
@@ -333,5 +334,20 @@ var GUIPlayer = function(playerName, rootComponent) {
     $messageBox.empty();
 
     $messageBox.append($('<p>' + message + '</p>'));
+  }
+
+  function sortCards(cards) {
+    var suitOrder = [Card.Suit.SPADE, Card.Suit.DIAMOND, Card.Suit.CLUB, Card.Suit.HEART];
+
+    return cards.sort(function(c1, c2) {
+      var suitIndex1 = suitOrder.indexOf(c1.getSuit());
+      var suitIndex2 = suitOrder.indexOf(c2.getSuit());
+
+      if (suitIndex1 - suitIndex2 !== 0) {
+        return suitIndex1 - suitIndex2;
+      }
+
+      return c1.getRank() - c2.getRank();
+    });
   }
 }
