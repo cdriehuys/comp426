@@ -63,7 +63,7 @@ class PointEvent:
 
 
 Player = namedtuple('Player', ['id', 'first_name', 'last_name', 'team_id'])
-PointEventType = namedtuple('PointEventType', ['id', 'name'])
+PointEventType = namedtuple('PointEventType', ['id', 'name', 'points'])
 Team = namedtuple('Team', ['id', 'name'])
 
 
@@ -115,51 +115,40 @@ def create_point_event(cursor, date, scoring_player, opposing_team,
                        event_type, passing_player=None):
     """
     Create a new point event.
-    """
-    if passing_player:
-        passing_query = 'passer_id = %s'
-    else:
-        passing_query = 'passer_id IS NULL'
 
-    query = ('SELECT * FROM point_events WHERE date_scored = %s AND '
-             'scoring_player_id = %s AND opposing_team_id = %s AND '
-             'type_id = %s AND {passing} LIMIT 1'
-             ).format(passing=passing_query)
+    We don't do any duplicate checking here because it's impossible
+    given the data we have. If a player scores from events of the same
+    type in the same game we don't have enough information to
+    differentiate them. This is not an issue however because the
+    database is wiped between imports.
+    """
     query_params = [date, scoring_player.id, opposing_team.id, event_type.id]
 
     if (passing_player):
         query_params.append(passing_player.id)
 
-    count = cursor.execute(query, query_params)
+    columns = [
+        'date_scored', 'scoring_player_id', 'opposing_team_id', 'type_id'
+    ]
+    if passing_player:
+        columns.append('passer_id')
 
-    if count:
-        point_event = PointEvent(*cursor.fetchone())
+    sql = 'INSERT INTO point_events ({columns}) VALUES ({vars})'.format(
+        columns=', '.join(columns),
+        vars=','.join('%s' for i in range(len(columns))))
 
-        logging.debug('Found duplicate point event (ID %d)', point_event.id)
+    cursor.execute(sql, query_params)
 
-        return point_event
-    else:
-        columns = [
-            'date_scored', 'scoring_player_id', 'opposing_team_id', 'type_id'
-        ]
-        if passing_player:
-            columns.append('passer_id')
-
-        sql = 'INSERT INTO point_events ({columns}) VALUES ({vars})'.format(
-            columns=', '.join(columns),
-            vars=','.join('%s' for i in range(len(columns))))
-
-        cursor.execute(sql, query_params)
-
-        return PointEvent(cursor.lastrowid, *query_params)
+    return PointEvent(cursor.lastrowid, *query_params)
 
 
-def create_point_event_type(cursor, name):
+def create_point_event_type(cursor, name, points):
     """
     Create a new point event type.
     """
-    query = 'SELECT * FROM point_event_types WHERE name = %s LIMIT 1'
-    query_params = (name,)
+    query = ('SELECT * FROM point_event_types WHERE name = %s AND points = %s '
+             'LIMIT 1')
+    query_params = (name, points)
 
     count = cursor.execute(query, query_params)
 
@@ -168,7 +157,7 @@ def create_point_event_type(cursor, name):
 
         return PointEventType._make(cursor.fetchone())
     else:
-        sql = 'INSERT INTO point_event_types (name) VALUES (%s)'
+        sql = 'INSERT INTO point_event_types (name, points) VALUES (%s, %s)'
 
         logging.info('Creating new point event type: %s', name)
         logging.debug('Executing SQL: %s', sql % query_params)
@@ -215,10 +204,24 @@ def get_db_connection():
         user=db_username)
 
 
+def get_points_for_event(event_name):
+    """
+    Get the number of points that an event is worth.
+    """
+    if event_name.lower() == 'fieldgoal':
+        return 3
+
+    return 7
+
+
 def import_row(database, row):
     """
     Import a row into the database.
     """
+    # Discard blank rows
+    if not row.strip():
+        return
+
     data_point = DataPoint.from_data_row(row)
 
     cursor = database.cursor()
@@ -241,7 +244,10 @@ def import_row(database, row):
     else:
         passer = None
 
-    point_event_type = create_point_event_type(cursor, data_point.type_name)
+    point_event_type = create_point_event_type(
+        cursor,
+        data_point.type_name,
+        get_points_for_event(data_point.type_name))
 
     create_point_event(
         cursor,
