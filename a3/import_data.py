@@ -52,16 +52,16 @@ class DataPoint:
 
 
 class PointEvent:
-    def __init__(self, id, date_scored, scoring_player_id, opposing_team_id,
-                 type_id, passer_id=None):
+    def __init__(self, id, scoring_player_id, game_id, type_id,
+                 passer_id=None):
         self.id = id
-        self.date_scored = date_scored
         self.scoring_player_id = scoring_player_id
-        self.opposing_team_id = opposing_team_id
+        self.game_id = game_id
         self.type_id = type_id
         self.passer_id = passer_id
 
 
+Game = namedtuple('Game', ['id', 'team1_id', 'team2_id', 'date_played'])
 Player = namedtuple('Player', ['id', 'first_name', 'last_name', 'team_id'])
 PointEventType = namedtuple('PointEventType', ['id', 'name', 'points'])
 Team = namedtuple('Team', ['id', 'name'])
@@ -73,7 +73,13 @@ def clean_db(conn):
     """
     logging.warning('Wiping database before import')
 
-    tables = ('players', 'teams', 'point_event_types', 'point_events')
+    tables = (
+        'games',
+        'players',
+        'point_event_types',
+        'point_events',
+        'teams',
+    )
 
     cursor = conn.cursor()
 
@@ -83,6 +89,41 @@ def clean_db(conn):
 
     cursor.close()
     conn.commit()
+
+
+def create_game(cursor, team1, team2, date_played):
+    """
+    Create a record of a game between 2 teams.
+    """
+    query = ('SELECT * FROM games WHERE ((team1_id = %s AND team2_id = %s) OR '
+             '(team2_id = %s AND team1_id = %s)) AND date_played = %s')
+    team_ids = (team1.id, team2.id)
+    query_params = team_ids[:] + team_ids[:] + (date_played,)
+
+    count = cursor.execute(query, query_params)
+
+    if count:
+        logging.debug(
+            'Found game record for %s vs. %s on %s',
+            team1.name,
+            team2.name,
+            date_played)
+
+        return Game._make(cursor.fetchone())
+    else:
+        sql = ('INSERT INTO games (team1_id, team2_id, date_played) VALUES '
+               '(%s, %s, %s)')
+        insert_params = team_ids[:] + (date_played,)
+
+        logging.info(
+            'Creating game record for %s vs. %s on %s',
+            team1.name,
+            team2.name,
+            date_played)
+
+        cursor.execute(sql, insert_params)
+
+        return Game(cursor.lastrowid, *insert_params)
 
 
 def create_player(cursor, first, last, team):
@@ -111,8 +152,8 @@ def create_player(cursor, first, last, team):
         return Player(cursor.lastrowid, *query_params)
 
 
-def create_point_event(cursor, date, scoring_player, opposing_team,
-                       event_type, passing_player=None):
+def create_point_event(cursor, scoring_player, game, event_type,
+                       passing_player=None):
     """
     Create a new point event.
 
@@ -122,13 +163,13 @@ def create_point_event(cursor, date, scoring_player, opposing_team,
     differentiate them. This is not an issue however because the
     database is wiped between imports.
     """
-    query_params = [date, scoring_player.id, opposing_team.id, event_type.id]
+    query_params = [scoring_player.id, game.id, event_type.id]
 
     if (passing_player):
         query_params.append(passing_player.id)
 
     columns = [
-        'date_scored', 'scoring_player_id', 'opposing_team_id', 'type_id'
+        'scoring_player_id', 'game_id', 'type_id'
     ]
     if passing_player:
         columns.append('passer_id')
@@ -229,6 +270,8 @@ def import_row(database, row):
     team = create_team(cursor, data_point.team_name)
     opposing_team = create_team(cursor, data_point.opposing_team_name)
 
+    game = create_game(cursor, team, opposing_team, data_point.date)
+
     player = create_player(
         cursor,
         data_point.player_first,
@@ -251,9 +294,8 @@ def import_row(database, row):
 
     create_point_event(
         cursor,
-        data_point.date,
         player,
-        opposing_team,
+        game,
         point_event_type,
         passer)
 

@@ -12,6 +12,14 @@ CREATE TABLE IF NOT EXISTS players (
     UNIQUE (id)
 );
 
+CREATE TABLE IF NOT EXISTS games (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    team1_id INT UNSIGNED NOT NULL,
+    team2_id INT UNSIGNED NOT NULL,
+    date_played DATE NOT NULL,
+    UNIQUE (id)
+);
+
 CREATE TABLE IF NOT EXISTS point_event_types (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(16) NOT NULL,
@@ -22,9 +30,8 @@ CREATE TABLE IF NOT EXISTS point_event_types (
 
 CREATE TABLE IF NOT EXISTS point_events (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    date_scored DATE NOT NULL,
     scoring_player_id INT UNSIGNED NOT NULL,
-    opposing_team_id INT UNSIGNED NOT NULL,
+    game_id INT UNSIGNED NOT NULL,
     type_id INT UNSIGNED NOT NULL,
     passer_id INT UNSIGNED,
     UNIQUE (id)
