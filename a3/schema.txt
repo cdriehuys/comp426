@@ -1,0 +1,42 @@
+This is a simplified, text version of the schema. To see the SQL used to create
+the database, look at the 'schema.sql' file adjacent to this one.
+
+
+games:
+  id: INT UNSIGNED, auto incrementing primary key.
+  team1_id: INT UNSIGNED, foreign key to a team from the 'teams' table.
+  team2_id: INT UNSIGNED, foreign key to a team from the 'teams' table.
+  date_played: DATE, the date the game was played.
+
+
+players:
+  id: INT UNSIGNED, auto incrementing primary key.
+  first_name: VARCHAR(50), the player's first name.
+  last_name: VARCHAR(50), the player's last name.
+  team_id: INT UNSIGNED, foreign key to the team in the 'teams' table that the
+           player plays for.
+
+
+point_event_types:
+  id: INT UNSIGNED, auto incrementing primary key.
+  name: VARCHAR(16), the name of the scoring event (fieldgoal, rushing,
+        passing, etc.). Must be unique.
+  points: TINYINT UNSIGNED, the number of points the event type is worth.
+
+
+point_events:
+  id: INT UNSIGNED, auto incrementing primary key
+  scoring_player_id: INT UNSIGNED, foreign key to the player in the 'players'
+                     table who scored.
+  game_id: INT UNSIGNED, foreign key to the game from the 'games' table that
+           the point event occurred in.
+  type_id: INT UNSIGNED, foreign key to an event type from the
+           'point_event_types' table.
+  passer_id: INT UNSIGNED, foreign key to the player from the 'players' table
+             who threw the touchdown. This will be null unless the event was a
+             'passing' event.
+
+
+teams:
+  id: INT UNSIGNED, auto incrementing primary key.
+  name: VARCHAR(50), the name of the team.
